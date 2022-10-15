@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - '5432:5432'
+    
+  backend:
+    build:
+      context: .
+    enviornment:
+      DB_USER: admin
+      DB_PASSWORD: 12345
+      DB_HOST: localhost
+      DB_SCHEMA: khudmadad
+    depends_on:
+      - db
+    ports:
+      - '3000:3000'
