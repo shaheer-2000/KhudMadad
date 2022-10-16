@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 
 const morgan = require('morgan');
+const cors = require('cors');
 
 const affiliationRoutes = require('./routes/affiliation');
 const loginRoute = require('./routes/login');
@@ -12,6 +13,8 @@ const clusterRoutes = require('./routes/clusters');
 const { verifyJWT, errorHandler } = require('./lib/utils');
 
 app.use(morgan('tiny'));
+
+app.use(cors());
 
 app.use(express.urlencoded({
 	extended: false
