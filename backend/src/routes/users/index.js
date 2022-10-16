@@ -18,11 +18,15 @@ router.get('/:username', async (req, res) => {
 			where: {
 				username
 			},
-			include: {
+			select: {
+				username: true,
+				firstName: true,
+				lastName: true,
+				email: true,
 				affiliation: {
 					select: {
-						orgName,
-						orgType
+						orgName: true,
+						orgType: true
 					}
 				},
 				_count: {
@@ -30,17 +34,12 @@ router.get('/:username', async (req, res) => {
 						reports: true
 					}
 				}
-			},
-			select: {
-				username: true,
-				firstName: true,
-				lastName: true,
-				email: true,
 			}
 		});
 
 		return res.status(200).send(user);
 	} catch (e) {
+		console.error(e.message);
 		res.status(500).send({
 			success: false,
 			error: 'failed to fetch user'
@@ -84,7 +83,7 @@ router.post('/signup', async (req, res) => {
 
 		return res.status(200).send({ success: true });
 	} catch (e) {
-		return res.status(500).send({ success: false, error: e.message });
+		return res.status(500).send({ success: false, error: 'failed to create user' });
 	}
 });
 

@@ -25,6 +25,8 @@ model User {
   affiliateApp AffiliateApp?
   affiliation  Affiliation?
   reports      Report[]
+
+  @@map("users")
 }
 
 model AffiliateApp {
@@ -43,6 +45,8 @@ model Affiliation {
   username String  @id
   orgName  String
   orgType  OrgType
+
+  @@map("affiliations")
 }
 
 model Report {
@@ -62,22 +66,28 @@ model Report {
   isBoosted          Boolean       @default(false)
 
   cluster ClusterReport?
+
+  @@map("reports")
 }
 
 model Cluster {
-  clusterId     Int           @id @default(autoincrement())
-  longitude     Float
-  latitude      Float
-  disasterType  DisasterType
-  priorityIndex PriorityIndex
+  clusterId          Int           @id @default(autoincrement())
+  longitude          Float
+  latitude           Float
+  disasterType       DisasterType
+  priorityIndex      PriorityIndex
+  disasterOccurredAt DateTime
+  points             Int
 
-  clusterReport ClusterReport[]
+  clusterReports ClusterReport[]
+
+  @@map("clusters")
 }
 
 model ClusterReport {
-  Cluster   Cluster @relation(fields: [clusterId], references: [clusterId])
+  cluster   Cluster @relation(fields: [clusterId], references: [clusterId])
   clusterId Int
-  Report    Report  @relation(fields: [reportId], references: [reportId])
+  report    Report  @relation(fields: [reportId], references: [reportId])
   reportId  Int     @unique
 
   @@id([clusterId, reportId])
