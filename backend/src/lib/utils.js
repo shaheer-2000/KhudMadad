@@ -14,7 +14,7 @@ const { PrismaClient, OrgType, AppStatus, PriorityIndex, DisasterType } = requir
 
 const SALT_ROUNDS = 16;
 const JWT_ALGO = 'HS256';
-const JWT_EXPIRY = '3000s'; // 5 mins
+const JWT_EXPIRY = '7d'; // 5 mins
 const EXEMPT_PATHS = ['/login', '/users/signup'];
 
 const prisma = new PrismaClient();
