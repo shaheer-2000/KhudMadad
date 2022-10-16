@@ -72,8 +72,9 @@ export default function Map() {
                         />
                         {items && (
                             <>
-                                {items.map(({ latitude, longitude }) => (
+                                {items.map(({ latitude, longitude }, index) => (
                                     <Marker
+                                        key={index}
                                         position={[latitude, longitude]}
                                         icon={icon}
                                     ></Marker>
