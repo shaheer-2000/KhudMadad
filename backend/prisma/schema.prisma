@@ -1,0 +1,121 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  username    String   @id
+  password    String
+  firstName   String
+  lastName    String
+  email       String   @unique
+  mobileNum   String   @unique
+  idNum       String   @unique
+  isModerator Boolean  @default(false)
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  affiliateApp AffiliateApp?
+  affiliation  Affiliation?
+  reports      Report[]
+
+  @@map("users")
+}
+
+model AffiliateApp {
+  User        User      @relation(fields: [username], references: [username])
+  username    String    @id
+  orgName     String
+  orgType     OrgType
+  credentials String
+  status      AppStatus @default(PENDING)
+
+  @@map("affiliate_applications")
+}
+
+model Affiliation {
+  User     User    @relation(fields: [username], references: [username])
+  username String  @id
+  orgName  String
+  orgType  OrgType
+
+  @@map("affiliations")
+}
+
+model Report {
+  reportId           Int           @id @default(autoincrement())
+  User               User          @relation(fields: [username], references: [username])
+  username           String
+  title              String        @db.VarChar(255)
+  description        String        @default("")
+  longitude          Float
+  latitude           Float
+  supportingMediaOne String
+  supportingMediaTwo String?
+  priorityIndex      PriorityIndex @default(LOW)
+  disasterType       DisasterType
+  disasterOccurredAt DateTime
+  reportedAt         DateTime      @default(now())
+  isPublic           Boolean       @default(false)
+  isBoosted          Boolean       @default(false)
+
+  cluster ClusterReport?
+
+  @@map("reports")
+}
+
+model Cluster {
+  clusterId          Int           @id @default(autoincrement())
+  longitude          Float
+  latitude           Float
+  disasterType       DisasterType
+  priorityIndex      PriorityIndex
+  disasterOccurredAt DateTime
+  points             Int
+
+  clusterReports ClusterReport[]
+
+  @@map("clusters")
+}
+
+model ClusterReport {
+  cluster   Cluster @relation(fields: [clusterId], references: [clusterId])
+  clusterId Int
+  report    Report  @relation(fields: [reportId], references: [reportId])
+  reportId  Int     @unique
+
+  @@id([clusterId, reportId])
+  @@map("cluster_reports")
+}
+
+enum OrgType {
+  NGO
+  GOVT
+}
+
+enum AppStatus {
+  APPROVED
+  REJECTED
+  PENDING
+}
+
+enum PriorityIndex {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum DisasterType {
+  FLOOD
+  EARTHQUAKE
+  WILDFIRE
+  HURRICANE
+  TYPHOON
+}
