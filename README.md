@@ -6,6 +6,8 @@
 
 ## MLH Prize (GoDaddy Registry)
 - You can find the registered domain here: [khudmadad.co](khudmadad.co)
+- The backend API is available here: [www.khudmadad.co](www.khudmadad.co)
+- The frontend is available here: [frontend.khudmadad.co](frontend.khudmadad.co)
 
 ## Hackfest v2.0 Presentation
 - You can find the presentation here: [https://www.canva.com/design/DAFPIRvSElQ/b0-bUTTYKE2Ez1U79Lp9MA/view?utm_content=DAFPIRvSElQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton](https://www.canva.com/design/DAFPIRvSElQ/b0-bUTTYKE2Ez1U79Lp9MA/view?utm_content=DAFPIRvSElQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
