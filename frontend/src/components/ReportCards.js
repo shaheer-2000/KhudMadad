@@ -1,3 +1,5 @@
+import axios from "axios";
+import { DateTime } from "luxon";
 import {
     Box,
     Card,
@@ -14,113 +16,52 @@ import PlaceIcon from "@mui/icons-material/Place";
 import ReportDetail from "./Modal";
 import CircleIcon from "@mui/icons-material/Circle";
 
-export default function ReportCards({ clusters }) {
-    const [reports, setReports] = useState([
-        {
-            id: 1,
-            title: "Emergency at HackFest2.0",
-            emergencyType: "flood",
-            priority: "high",
-            description: "Some short description about the emergency",
-            images: [
-                "https://insideclimatenews.org/wp-content/uploads/2022/02/pakistan-flood_salbir-mazhar-anadolu-getty-scaled.jpg",
-                "https://www.thenews.com.pk//assets/uploads/akhbar/2020-07-18/688423_7123733_rain-khi-2_akhbar.jpg",
-            ],
-        },
-        {
-            id: 2,
-            title: "Report 2",
-            emergencyType: "wildfire",
-            priority: "low",
-            description: "Some short description about the emergency",
-            images: [
-                "https://insideclimatenews.org/wp-content/uploads/2022/02/pakistan-flood_salbir-mazhar-anadolu-getty-scaled.jpg",
-                "https://www.thenews.com.pk//assets/uploads/akhbar/2020-07-18/688423_7123733_rain-khi-2_akhbar.jpg",
-            ],
-        },
-        {
-            id: 3,
-            title: "Report 3",
-            emergencyType: "earthquake",
-            priority: "medium",
-            description: "Some short description about the emergency",
-            images: [
-                "https://insideclimatenews.org/wp-content/uploads/2022/02/pakistan-flood_salbir-mazhar-anadolu-getty-scaled.jpg",
-            ],
-        },
-        {
-            id: 4,
-            title: "Report 4",
-            emergencyType: "flood",
-            priority: "medium",
-            description: "Some short description about the emergency",
-            images: [
-                "https://insideclimatenews.org/wp-content/uploads/2022/02/pakistan-flood_salbir-mazhar-anadolu-getty-scaled.jpg",
-            ],
-        },
-        {
-            id: 5,
-            title: "Report 5",
-            emergencyType: "flood",
-            priority: "medium",
-            description: "Some short description about the emergency",
-            images: [
-                "https://insideclimatenews.org/wp-content/uploads/2022/02/pakistan-flood_salbir-mazhar-anadolu-getty-scaled.jpg",
-            ],
-        },
-        {
-            id: 6,
-            title: "Report 6",
-            emergencyType: "flood",
-            priority: "low",
-            description: "Some short description about the emergency",
-            images: [
-                "https://insideclimatenews.org/wp-content/uploads/2022/02/pakistan-flood_salbir-mazhar-anadolu-getty-scaled.jpg",
-            ],
-        },
-        {
-            id: 7,
-            title: "Report 7",
-            emergencyType: "flood",
-            priority: "high",
-            description: "Some short description about the emergency",
-            images: [
-                "https://insideclimatenews.org/wp-content/uploads/2022/02/pakistan-flood_salbir-mazhar-anadolu-getty-scaled.jpg",
-            ],
-        },
-        {
-            id: 8,
-            title: "Report 8",
-            emergencyType: "flood",
-            priority: "high",
-            description: "Some short description about the emergency",
-            images: [
-                "https://insideclimatenews.org/wp-content/uploads/2022/02/pakistan-flood_salbir-mazhar-anadolu-getty-scaled.jpg",
-            ],
-        },
-        {
-            id: 9,
-            title: "Report 9",
-            emergencyType: "flood",
-            priority: "medium",
-            description: "Some short description about the emergency",
-            images: [
-                "https://insideclimatenews.org/wp-content/uploads/2022/02/pakistan-flood_salbir-mazhar-anadolu-getty-scaled.jpg",
-            ],
-        },
-        {
-            id: 10,
-            title: "Report 10",
-            emergencyType: "flood",
-            priority: "low",
-            description: "Some short description about the emergency",
-            images: [
-                "https://insideclimatenews.org/wp-content/uploads/2022/02/pakistan-flood_salbir-mazhar-anadolu-getty-scaled.jpg",
-            ],
-        },
-    ]);
+export default function ReportCards() {
+    const [clusters, setClusters] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [modalIndex, setModalIndex] = useState();
+
+    useEffect(() => {
+        let instance = axios.create({
+            baseURL: "https://khudmadad.up.railway.app",
+            headers: {
+                post: {
+                    "Content-Type": "application/json",
+                },
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
+
+        async function fetchCluster() {
+            try {
+                let res = await instance.get(
+                    `/clusters?latitude=${localStorage.getItem(
+                        "lat"
+                    )}&longitude=${localStorage.getItem("long")}`
+                );
+
+                setClusters(res.data);
+                localStorage.setItem("clusters", JSON.stringify(res.data));
+                console.log("cluster => ", res.data);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        fetchCluster();
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            }
+        }
+        getLocation();
+    }, []);
+
+    function showPosition(position) {
+        console.log(position.coords.latitude, position.coords.longitude);
+        localStorage.setItem("lat", position.coords.latitude);
+        localStorage.setItem("long", position.coords.longitude);
+    }
 
     console.log(clusters);
     return (
@@ -133,7 +74,7 @@ export default function ReportCards({ clusters }) {
                 top: "62px",
             }}
         >
-            {clusters?.map((cluster, index) => (
+            {clusters.map((cluster, index) => (
                 <Card
                     key={index}
                     sx={{ marginY: "12px", position: "relative" }}
@@ -180,7 +121,7 @@ export default function ReportCards({ clusters }) {
                                 }}
                             >
                                 <Typography variant="h5" component="div">
-                                    {report.title}
+                                    {cluster.clusterReports[0].report.title}
                                 </Typography>
                                 <Box
                                     sx={{
@@ -190,19 +131,27 @@ export default function ReportCards({ clusters }) {
                                     }}
                                 >
                                     <Chip
-                                        label={report.emergencyType}
+                                        label={
+                                            cluster.clusterReports[0].report
+                                                .disasterType
+                                        }
                                         variant="filled"
                                         sx={{
                                             marginX: "12px",
                                             color: "white",
                                             backgroundColor:
-                                                report.emergencyType == "flood"
+                                                cluster.clusterReports[0].report
+                                                    .disasterType == "FLOOD"
                                                     ? "skyblue"
-                                                    : report.emergencyType ==
-                                                      "wildfire"
+                                                    : cluster.clusterReports[0]
+                                                          .report
+                                                          .disasterType ==
+                                                      "WILDFIRE"
                                                     ? "lightsalmon"
-                                                    : report.emergencyType ==
-                                                      "earthquake"
+                                                    : cluster.clusterReports[0]
+                                                          .report
+                                                          .disasterType ==
+                                                      "EARTHQUAKE"
                                                     ? "lightpink"
                                                     : "grey",
                                         }}
@@ -210,10 +159,13 @@ export default function ReportCards({ clusters }) {
                                     <CircleIcon
                                         sx={{
                                             color:
-                                                report.priority == "high"
+                                                cluster.clusterReports[0].report
+                                                    .priorityIndex == "HIGH"
                                                     ? "red"
-                                                    : report.priority ==
-                                                      "medium"
+                                                    : cluster.clusterReports[0]
+                                                          .report
+                                                          .priorityIndex ==
+                                                      "MEDIUM"
                                                     ? "orange"
                                                     : "green",
                                         }}
@@ -222,7 +174,7 @@ export default function ReportCards({ clusters }) {
                             </Box>
                         </Box>
                         <Typography variant="body2" color="text.secondary">
-                            Some short description about the report
+                            {cluster.clusterReports[0].report.description}
                         </Typography>
                     </CardContent>
                     <Box
@@ -250,14 +202,17 @@ export default function ReportCards({ clusters }) {
                             </Button>
                         </CardActions>
                         <Typography sx={{ color: "#aaa", fontSize: "14px" }}>
-                            13:55 | 16/10/2022
+                            {DateTime.fromISO(
+                                cluster.clusterReports[0].report
+                                    .disasterOccurredAt
+                            ).toLocaleString(DateTime.DATETIME_MED)}
                         </Typography>
                     </Box>
                     {modalIndex == index && (
                         <ReportDetail
                             openModal={openModal}
                             setOpenModal={setOpenModal}
-                            report={report}
+                            report={cluster}
                         />
                     )}
                 </Card>

@@ -51,7 +51,7 @@ export default function DrawerContent() {
                     Reports
                 </GreyTextButton>
                 <GreyTextButton
-                    onClick={() => router.push("/reports")}
+                    onClick={() => router.push("/map")}
                     sx={{
                         paddingX: "24px",
                         fontSize: "18px",

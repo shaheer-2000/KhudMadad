@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 export default function ReportDetail({ openModal, setOpenModal, report }) {
     let router = useRouter();
 
+    console.log("report -> ", report);
     return (
         <Modal
             open={openModal}
@@ -60,7 +61,7 @@ export default function ReportDetail({ openModal, setOpenModal, report }) {
                             component="h2"
                             sx={{ color: "white" }}
                         >
-                            {report.title}
+                            {report.clusterReports[0].report.title}
                         </Typography>
                         <IconButton
                             onClick={() => setOpenModal(false)}
@@ -86,17 +87,17 @@ export default function ReportDetail({ openModal, setOpenModal, report }) {
                                 flexGrow: 1,
                                 borderRadius: "4px",
                                 overflow: "hidden",
-                                backgroundImage: `url(${report.images[0]})`,
+                                backgroundImage: `url(${report.clusterReports[0].report.supportingMediaOne})`,
                                 backgroundSize: "cover",
                             }}
                         ></Box>
-                        {report.images[1] && (
+                        {report.clusterReports[0].report.supportingMediaTwo && (
                             <Box
                                 sx={{
                                     flexGrow: 1,
                                     borderRadius: "4px",
                                     overflow: "hidden",
-                                    backgroundImage: `url(${report.images[1]})`,
+                                    backgroundImage: `url(${report.clusterReports[0].report.supportingMediaTwo})`,
                                     backgroundSize: "cover",
                                     backgroundPosition: "center",
                                 }}
@@ -107,7 +108,7 @@ export default function ReportDetail({ openModal, setOpenModal, report }) {
                         id="transition-modal-description"
                         sx={{ mt: 2, color: "#ddd" }}
                     >
-                        {report.description}
+                        {report.clusterReports[0].report.description}
                     </Typography>
                     <Box
                         sx={{
@@ -118,25 +119,29 @@ export default function ReportDetail({ openModal, setOpenModal, report }) {
                         }}
                     >
                         <Chip
-                            label={report.emergencyType}
+                            label={report.clusterReports[0].report.disasterType}
                             sx={{
                                 color: "white",
                                 backgroundColor:
-                                    report.emergencyType == "flood"
+                                    report.clusterReports[0].report
+                                        .disasterType == "FLOOD"
                                         ? "skyblue"
-                                        : report.emergencyType == "wildfire"
+                                        : report.clusterReports[0].report
+                                              .disasterType == "WILDFIRE"
                                         ? "lightsalmon"
-                                        : report.emergencyType == "earthquake"
+                                        : report.clusterReports[0].report
+                                              .disasterType == "EARTHQUAKE"
                                         ? "lightpink"
                                         : "grey",
                             }}
                         />
                         <Typography sx={{ color: "#ddd" }}>
-                            {report.priority} severity
+                            {report.clusterReports[0].report.priorityIndex.toLowerCase()}{" "}
+                            severity
                         </Typography>
                     </Box>
                     <Typography sx={{ color: "#ddd" }}>
-                        Approx. 1000sq km of area affected
+                        Approx. 100sq km of area affected
                     </Typography>
                     <Box>
                         <Button
@@ -152,7 +157,7 @@ export default function ReportDetail({ openModal, setOpenModal, report }) {
                                 textDecoration: "underline",
                             }}
                         >
-                            7 people reported
+                            {report.clusterReports.length} similar reports
                         </Button>
                     </Box>
                 </Box>

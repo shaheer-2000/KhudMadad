@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
   padding: 0;
@@ -17,6 +21,11 @@ a {
 
 .css-eueg6h-MuiCardContent-root:last-child {
   padding-bottom: 16px;
+}
+
+.leaflet-container {
+  width: 80%;
+  height: 75vh;
 }
 
 @media (prefers-color-scheme: dark) {
