@@ -36,6 +36,7 @@ router.post('/', upload.single('supporting-media'), async (req, res) => {
 	// issues of bad payloads
 	const {
 		title,
+		description,
 		longitude,
 		latitude,
 		priorityIndex,
@@ -82,6 +83,7 @@ router.post('/', upload.single('supporting-media'), async (req, res) => {
 			data: {
 				username,
 				title,
+				description,
 				latitude: lat,
 				longitude: long,
 				priorityIndex,

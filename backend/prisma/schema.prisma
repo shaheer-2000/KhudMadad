@@ -54,6 +54,7 @@ model Report {
   User               User          @relation(fields: [username], references: [username])
   username           String
   title              String        @db.VarChar(255)
+  description        String        @default("")
   longitude          Float
   latitude           Float
   supportingMediaOne String
